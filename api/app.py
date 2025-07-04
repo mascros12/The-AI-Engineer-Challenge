@@ -9,6 +9,8 @@ from openai import OpenAI
 import os
 from typing import Optional
 
+from fastapi.openapi.docs import get_swagger_ui_html
+from fastapi.openapi.utils import get_openapi
 # Initialize FastAPI application with a title
 app = FastAPI(title="OpenAI Chat API")
 
@@ -29,6 +31,19 @@ class ChatRequest(BaseModel):
     user_message: str      # Message from the user
     model: Optional[str] = "gpt-4.1-mini"  # Optional model selection with default
     api_key: str          # OpenAI API key for authentication
+
+# Configuración de la documentación de FastAPI para soportar OAuth2
+@app.get("/docs", include_in_schema=False)
+async def get_swagger_ui():
+    return get_swagger_ui_html(
+        openapi_url="/openapi.json",
+        title="API Docs",
+        swagger_ui_parameters={"oauth2RedirectUrl": "/docs/oauth2-redirect"},
+        init_oauth={
+            "clientId": "your-client-id",
+            "usePkceWithAuthorizationCodeGrant": True,
+        },
+    )
 
 # Define the main chat endpoint that handles POST requests
 @app.post("/api/chat")
