@@ -171,16 +171,233 @@ Here's a template to get your post started!
 ```
 🚀🎉 Exciting News! 🎉🚀
 
-🏗️ Today, I'm thrilled to announce that I've successfully built and shipped my first-ever LLM using the powerful combination of , and the OpenAI API! 🖥️
+🏗️ Today, I'm thrilled to announce that I've successfully built and shipped my first-ever LLM using the powerful combination of , and the OpenAI API! 🖥️
 
 Check it out 👇
 [LINK TO APP]
 
 A big shoutout to the @AI Makerspace for all making this possible. Couldn't have done it without the incredible community there. 🤗🙏
 
-Looking forward to building with the community! 🙌✨ Here's to many more creations ahead! 🥂🎉
+Looking forward to building with the community! 🙌✨ Here's to many more creations ahead! 🥂🎉
 
 Who else is diving into the world of AI? Let's connect! 🌐💡
 
 #FirstLLMApp 
 ```
+
+# 🎯 Warhammer 40K Chat - Ave Imperator!
+
+Una aplicación de chat temática del universo Warhammer 40K con soporte para múltiples razas, historial persistente y renderizado de Markdown.
+
+## ⚡ Características
+
+### 🎨 **Interfaz Temática**
+- **Selector de Razas**: Imperium (dorado), Chaos (rojo), Xenos (verde)
+- **Ambientación Imperial**: Diseño inspirado en el Imperio de la Humanidad
+- **Responsive**: Adaptado para móvil, tablet y escritorio
+- **Fuente Roboto**: Tipografía moderna y legible
+
+### 🤖 **Chat Inteligente**
+- **OpenAI GPT-4**: Respuestas contextuales según la raza seleccionada
+- **Markdown Support**: Renderizado rico con resaltado de sintaxis
+- **Streaming**: Respuestas en tiempo real
+- **Temas por Raza**: Cada facción tiene su personalidad única
+
+### 📚 **Historial Persistente**
+- **MongoDB**: Almacenamiento de conversaciones
+- **Auto-guardado**: Los chats se guardan automáticamente
+- **Navegación**: Página dedicada para explorar conversaciones anteriores
+- **Gestión**: Visualizar, eliminar y organizar chats por raza
+
+## 🛠️ Instalación y Configuración
+
+### 📋 **Requisitos**
+- Node.js 18+
+- Python 3.8+
+- MongoDB (local o Atlas)
+
+### 🚀 **Configuración Rápida**
+
+1. **Clonar el repositorio**
+```bash
+git clone <repository-url>
+cd warhammer40k-chat
+```
+
+2. **Configurar Variables de Entorno**
+
+**Frontend** (`frontend/.env.local`):
+```env
+NEXT_PUBLIC_OPENAI_API_KEY=tu_clave_openai_aqui
+```
+
+**Backend** (`api/.env`):
+```env
+# Para MongoDB local
+MONGODB_URL=mongodb://localhost:27017
+
+# Para MongoDB Atlas
+MONGODB_URL=mongodb+srv://usuario:password@cluster.mongodb.net/
+
+# Opcional: OpenAI API Key para el servidor
+OPENAI_API_KEY=tu_clave_openai_aqui
+```
+
+3. **Instalar Dependencias**
+
+**Backend:**
+```bash
+cd api
+pip install -r requirements.txt
+```
+
+**Frontend:**
+```bash
+cd frontend
+npm install
+```
+
+4. **Ejecutar la Aplicación**
+
+**Opción A - Script Automático:**
+```bash
+# Desde la raíz del proyecto
+chmod +x run-local.sh
+./run-local.sh
+```
+
+**Opción B - Manual:**
+```bash
+# Terminal 1: Backend
+cd api
+python app.py
+
+# Terminal 2: Frontend
+cd frontend
+npm run dev
+```
+
+### 🌐 **Acceso**
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+
+## 📊 **Estructura del Proyecto**
+
+```
+├── api/                    # Backend Python (FastAPI)
+│   ├── app.py             # API principal
+│   ├── database.py        # Gestor de MongoDB
+│   ├── requirements.txt   # Dependencias Python
+│   └── .env              # Variables de entorno
+├── frontend/              # Frontend Next.js
+│   ├── src/app/
+│   │   ├── page.tsx      # Página principal
+│   │   ├── historial/    # Página de historial
+│   │   └── components/   # Componentes React
+│   └── .env.local        # Variables de entorno frontend
+├── run-local.sh          # Script de ejecución
+└── vercel.json           # Configuración de deployment
+```
+
+## 🎮 **Uso de la Aplicación**
+
+### 💬 **Chat Principal**
+1. **Seleccionar Raza**: Usa el dropdown en el navbar
+2. **Escribir Mensaje**: En el input inferior
+3. **Enviar**: El chat responderá según la raza seleccionada
+4. **Auto-guardado**: Las conversaciones se guardan automáticamente
+
+### 📚 **Historial**
+1. **Acceder**: Click en "📚 Historial" en el navbar
+2. **Explorar**: Lista de conversaciones por fecha
+3. **Ver Detalles**: Click en cualquier sesión
+4. **Eliminar**: Botón 🗑️ en cada sesión
+
+### 🎨 **Razas Disponibles**
+
+| Raza | Colores | Personalidad |
+|------|---------|--------------|
+| **Imperium** | 🟨 Dorado | Adeptus Mechanicus formal y leal |
+| **Chaos** | 🔴 Rojo | Daemon malévolo del Warp |
+| **Xenos** | 🟢 Verde | Entidad alienígena superior |
+
+## 🔧 **API Endpoints**
+
+### Chat
+- `POST /api/chat` - Enviar mensaje
+- `POST /api/chat/save` - Guardar sesión
+- `GET /api/chat/history` - Obtener historial
+- `GET /api/chat/{id}` - Obtener sesión específica
+- `PUT /api/chat/update` - Actualizar sesión
+- `DELETE /api/chat/{id}` - Eliminar sesión
+
+### Utilidad
+- `GET /api/health` - Estado de la API
+
+## 🗄️ **Base de Datos**
+
+### **Estructura de Sesión**
+```json
+{
+  "_id": "ObjectId",
+  "title": "Título del chat",
+  "race": "imperium|chaos|xenos",
+  "messages": [
+    {
+      "role": "user|ai",
+      "content": "Contenido del mensaje"
+    }
+  ],
+  "model": "gpt-4.1-mini",
+  "message_count": 5,
+  "created_at": "2024-01-01T00:00:00Z",
+  "updated_at": "2024-01-01T00:00:00Z"
+}
+```
+
+## 🚀 **Deployment**
+
+### **Vercel (Recomendado)**
+```bash
+# Configurar variables de entorno en Vercel Dashboard
+# Luego:
+vercel
+```
+
+### **Variables de Entorno para Producción**
+- `NEXT_PUBLIC_OPENAI_API_KEY`: Clave OpenAI para frontend
+- `MONGODB_URL`: URL de conexión MongoDB
+- `OPENAI_API_KEY`: (Opcional) Clave OpenAI para backend
+
+## 🛡️ **Tecnologías**
+
+### **Frontend**
+- Next.js 14 (App Router)
+- TypeScript
+- Tailwind CSS
+- React Markdown
+- Fuente Roboto
+
+### **Backend**
+- FastAPI
+- Python 3.8+
+- MongoDB (PyMongo)
+- OpenAI API
+- Uvicorn
+
+## 🎯 **Roadmap**
+
+- [ ] Sistema de autenticación
+- [ ] Compartir conversaciones
+- [ ] Más razas (Tau, Necrones, etc.)
+- [ ] Modo offline
+- [ ] Exportar historial
+
+## 📜 **Licencia**
+
+Este proyecto está bajo la licencia MIT.
+
+---
+
+**Ave Imperator! El conocimiento es poder, guárdalo bien.** ⚡🛡️
