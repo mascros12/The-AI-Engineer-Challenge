@@ -17,7 +17,7 @@ const Navbar: React.FC = () => {
 
   return (
     <nav className={styles.navbar}>
-      <div className={styles.logo}>ChatGPT Clone</div>
+      <div className={styles.logo}>Warhammer CR</div>
       <div className={styles.controls}>
         <select
           value={theme}

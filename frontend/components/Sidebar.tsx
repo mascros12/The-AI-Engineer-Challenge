@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import styles from '../styles/Sidebar.module.css';
 
 interface Session {
+  _id: string;
   title: string;
   race: string;
   messages: any[];
@@ -14,8 +15,13 @@ interface HistoryResponse {
   count: number;
 }
 
+interface SidebarProps {
+  onSelectSession: (sessionId: string) => void;
+  selectedSessionId?: string;
+}
+
 // Componente del historial de chats (Sidebar)
-const Sidebar: React.FC = () => {
+const Sidebar: React.FC<SidebarProps> = ({ onSelectSession, selectedSessionId }) => {
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -27,6 +33,7 @@ const Sidebar: React.FC = () => {
         const res = await fetch('/api/chat/history');
         if (!res.ok) throw new Error('Error al obtener el historial');
         const data: HistoryResponse = await res.json();
+        console.log(data);
         setSessions(data.sessions);
       } catch (err: any) {
         setError(err.message);
@@ -43,8 +50,15 @@ const Sidebar: React.FC = () => {
       {loading && <div>Cargando...</div>}
       {error && <div className={styles.error}>{error}</div>}
       <ul className={styles.sessionList}>
-        {sessions.map((s, idx) => (
-          <li key={idx} className={styles.sessionItem}>
+        {sessions.map((s) => (
+          <li
+            key={s._id}
+            className={
+              styles.sessionItem +
+              (selectedSessionId === s._id ? ' ' + styles.selected : '')
+            }
+            onClick={() => onSelectSession(s._id)}
+          >
             <div className={styles.title}>{s.title}</div>
             <div className={styles.meta}>
               <span className={styles.race}>{s.race}</span>

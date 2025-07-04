@@ -51,4 +51,8 @@
 .error {
   color: #ff4d4f;
   margin-bottom: 1rem;
+}
+
+.selected {
+  background: #444 !important;
 } 
