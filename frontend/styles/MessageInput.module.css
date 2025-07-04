@@ -1,0 +1,38 @@
+/* Estilos para el input de mensajes */
+/* ... existing code ... */
+
+.inputForm {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  border-top: 2px solid #444;
+  background: rgba(0,0,0,0.7);
+}
+
+.input {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border-radius: 6px;
+  border: 1px solid #888;
+  background: #222;
+  color: #fff;
+  font-size: 1rem;
+}
+
+.sendBtn {
+  padding: 0.7rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  background: #ffd700;
+  color: #101a2b;
+  font-weight: bold;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.sendBtn:disabled {
+  background: #ccc;
+  color: #888;
+  cursor: not-allowed;
+} 

@@ -1,0 +1,46 @@
+/* Estilos para el Navbar */
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 2rem;
+  background: rgba(0,0,0,0.7);
+  border-bottom: 2px solid #444;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.select {
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  border: 1px solid #888;
+  background: #222;
+  color: #fff;
+}
+
+.apiKeyBtn {
+  padding: 0.4rem 1rem;
+  border-radius: 4px;
+  border: none;
+  background: #ffd700;
+  color: #101a2b;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.apiKeyBtn:hover {
+  background: #ffe066;
+}
+
+/* ... existing code ... */ 

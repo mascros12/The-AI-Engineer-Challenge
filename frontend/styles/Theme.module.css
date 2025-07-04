@@ -1,0 +1,17 @@
+/* Estilos para los temas Imperium, Chaos y Xenos */
+/* ... existing code ... */
+
+.imperium {
+  background: #101a2b;
+  color: #ffd700;
+}
+
+.chaos {
+  background: #232323;
+  color: #d7263d;
+}
+
+.xenos {
+  background: #133d13;
+  color: #39ff14;
+} 
