@@ -33,9 +33,9 @@ export default function Home() {
     <div className={`min-h-screen flex flex-col bg-gradient-to-b ${currentTheme} transition-colors duration-500`}>
       <Navbar selectedRace={selectedRace} onRaceChange={setSelectedRace} />
       
-      <div className="flex-1 flex flex-col items-center justify-center px-4">
-        <header className="w-full max-w-2xl py-8 flex flex-col items-center">
-          <p className="text-gray-300 mt-2 text-center max-w-md">
+      <div className="flex-1 flex flex-col items-center px-4">
+        <header className="w-full max-w-2xl py-6 flex flex-col items-center">
+          <p className="text-gray-300 text-center max-w-md leading-relaxed">
             <span dangerouslySetInnerHTML={{ __html: currentSubtitle.quote }} /><br/>
             {currentSubtitle.description}
           </p>

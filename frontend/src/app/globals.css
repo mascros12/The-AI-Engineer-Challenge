@@ -6,10 +6,16 @@
   --font-roboto: 'Roboto', sans-serif;
 }
 
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: var(--font-roboto);
-  background: linear-gradient(to bottom, #000, #1a1a1a 60%, #bfa046 100%);
   color: #f5f5dc;
+  margin: 0;
+  padding: 0;
+  line-height: 1.6;
 }
 
 ::-webkit-scrollbar {

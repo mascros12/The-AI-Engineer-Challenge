@@ -13,24 +13,24 @@ const raceStyles = {
   imperium: {
     heading: "text-yellow-300 font-bold border-b border-yellow-700",
     link: "text-yellow-400 hover:text-yellow-300 underline",
-    code: "bg-yellow-900/30 text-yellow-200 border border-yellow-800",
-    blockquote: "border-l-4 border-yellow-600 bg-yellow-900/20 text-yellow-200",
+    code: "bg-yellow-900 bg-opacity-30 text-yellow-200 border border-yellow-800",
+    blockquote: "border-l-4 border-yellow-600 bg-yellow-900 bg-opacity-20 text-yellow-200",
     list: "text-yellow-200",
     strong: "text-yellow-300 font-bold"
   },
   chaos: {
     heading: "text-red-300 font-bold border-b border-red-700",
     link: "text-red-400 hover:text-red-300 underline",
-    code: "bg-red-900/30 text-red-200 border border-red-800",
-    blockquote: "border-l-4 border-red-600 bg-red-900/20 text-red-200",
+    code: "bg-red-900 bg-opacity-30 text-red-200 border border-red-800",
+    blockquote: "border-l-4 border-red-600 bg-red-900 bg-opacity-20 text-red-200",
     list: "text-red-200",
     strong: "text-red-300 font-bold"
   },
   xenos: {
     heading: "text-green-300 font-bold border-b border-green-700",
     link: "text-green-400 hover:text-green-300 underline",
-    code: "bg-green-900/30 text-green-200 border border-green-800",
-    blockquote: "border-l-4 border-green-600 bg-green-900/20 text-green-200",
+    code: "bg-green-900 bg-opacity-30 text-green-200 border border-green-800",
+    blockquote: "border-l-4 border-green-600 bg-green-900 bg-opacity-20 text-green-200",
     list: "text-green-200",
     strong: "text-green-300 font-bold"
   }
@@ -51,7 +51,7 @@ export function MarkdownRenderer({ content, selectedRace, isUser = false }: Mark
             code: ({ children, ...props }) => {
               const isInline = !props.className;
               return isInline ? (
-                <code className="bg-black/20 px-1 py-0.5 rounded text-sm">{children}</code>
+                <code className="bg-black bg-opacity-20 px-1 py-0.5 rounded text-sm">{children}</code>
               ) : (
                 <code {...props}>{children}</code>
               );
@@ -171,7 +171,7 @@ export function MarkdownRenderer({ content, selectedRace, isUser = false }: Mark
             </th>
           ),
           td: ({ children }) => (
-            <td className="p-2 text-sm border-b border-opacity-30">
+            <td className="p-2 text-sm border-b border-gray-600 border-opacity-30">
               {children}
             </td>
           ),

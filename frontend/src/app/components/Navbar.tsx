@@ -39,7 +39,7 @@ export function Navbar({ selectedRace, onRaceChange }: NavbarProps) {
   const router = useRouter();
 
   return (
-    <nav className="w-full bg-black/90 border-b border-gray-700 backdrop-blur-sm">
+    <nav className="w-full bg-black bg-opacity-90 border-b border-gray-700 backdrop-blur-sm">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Título */}
@@ -80,7 +80,7 @@ export function Navbar({ selectedRace, onRaceChange }: NavbarProps) {
 
               {/* Dropdown */}
               {isOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-black/95 border border-gray-600 rounded-lg shadow-xl z-50">
+                <div className="absolute right-0 mt-2 w-48 bg-black bg-opacity-95 border border-gray-600 rounded-lg shadow-xl z-50">
                   {Object.entries(raceConfig).map(([key, config]) => (
                     <button
                       key={key}

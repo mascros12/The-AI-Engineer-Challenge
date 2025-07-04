@@ -72,6 +72,27 @@ const raceConfig = {
   }
 };
 
+const raceBubble = {
+  imperium: {
+    user: "bg-yellow-100 text-yellow-900 border border-yellow-400",
+    ai: "bg-white bg-opacity-10 text-yellow-100 border border-yellow-700",
+    send: "bg-yellow-500 hover:bg-yellow-600 text-white",
+    input: "focus:ring-yellow-500 border-yellow-400"
+  },
+  chaos: {
+    user: "bg-red-100 text-red-900 border border-red-400",
+    ai: "bg-white bg-opacity-10 text-red-100 border border-red-700",
+    send: "bg-red-500 hover:bg-red-600 text-white",
+    input: "focus:ring-red-500 border-red-400"
+  },
+  xenos: {
+    user: "bg-green-100 text-green-900 border border-green-400",
+    ai: "bg-white bg-opacity-10 text-green-100 border border-green-700",
+    send: "bg-green-500 hover:bg-green-600 text-white",
+    input: "focus:ring-green-500 border-green-400"
+  }
+};
+
 export function ChatImperial({ selectedRace }: ChatImperialProps) {
   const config = raceConfig[selectedRace];
   const [messages, setMessages] = useState<Message[]>([
@@ -82,18 +103,14 @@ export function ChatImperial({ selectedRace }: ChatImperialProps) {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved" | "error">("idle");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  // Actualizar mensaje de bienvenida cuando cambie la raza
   useEffect(() => {
     setMessages([{
       role: "ai",
       content: config.welcomeMessage,
     }]);
-    // Reset session when race changes
-    setCurrentSessionId(null);
     setSaveStatus("idle");
   }, [selectedRace, config.welcomeMessage]);
 
@@ -102,18 +119,13 @@ export function ChatImperial({ selectedRace }: ChatImperialProps) {
   }, [messages]);
 
   const saveChat = async (chatMessages: Message[], isAutoSave = false) => {
-    // Only save if we have actual conversation (more than just welcome message)
     if (chatMessages.length <= 1) return;
-
     try {
       setSaveStatus("saving");
-      
-      // Generate a title from the first user message
       const firstUserMessage = chatMessages.find(m => m.role === "user");
       const title = firstUserMessage 
         ? firstUserMessage.content.slice(0, 50) + (firstUserMessage.content.length > 50 ? "..." : "")
         : `Chat ${selectedRace} - ${new Date().toLocaleDateString()}`;
-
       const response = await fetch("/api/chat/save", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -124,24 +136,10 @@ export function ChatImperial({ selectedRace }: ChatImperialProps) {
           model: "gpt-4.1-mini"
         }),
       });
-
-      if (!response.ok) {
-        throw new Error("Error guardando el chat");
-      }
-
-      const data = await response.json();
-      setCurrentSessionId(data.session_id);
+      if (!response.ok) throw new Error("Error guardando el chat");
       setSaveStatus("saved");
-      
-      if (!isAutoSave) {
-        console.log("💾 Chat guardado exitosamente");
-      }
-      
-      // Reset status after 3 seconds
       setTimeout(() => setSaveStatus("idle"), 3000);
-      
     } catch (error) {
-      console.error("Error guardando chat:", error);
       setSaveStatus("error");
       setTimeout(() => setSaveStatus("idle"), 3000);
     }
@@ -154,7 +152,6 @@ export function ChatImperial({ selectedRace }: ChatImperialProps) {
     setMessages(newMessages);
     setInput("");
     setLoading(true);
-    
     try {
       const api_key = process.env.NEXT_PUBLIC_OPENAI_API_KEY || "";
       const res = await fetch("/api/chat", {
@@ -170,7 +167,6 @@ export function ChatImperial({ selectedRace }: ChatImperialProps) {
       if (!res.body) throw new Error("No response body");
       const reader = res.body.getReader();
       let aiMsg = "";
-      
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
@@ -184,20 +180,16 @@ export function ChatImperial({ selectedRace }: ChatImperialProps) {
           }
         });
       }
-      
-      // Auto-save after AI response
       const finalMessages = [...newMessages, { role: "ai" as const, content: aiMsg }];
       await saveChat(finalMessages, true);
-      
     } catch {
-      const errorMessages = [
-        ...newMessages,
+      setMessages((msgs) => [
+        ...msgs,
         {
           role: "ai" as const,
           content: config.errorMessage,
         },
-      ];
-      setMessages(errorMessages);
+      ]);
     } finally {
       setLoading(false);
     }
@@ -223,60 +215,68 @@ export function ChatImperial({ selectedRace }: ChatImperialProps) {
   };
 
   return (
-    <section className={`flex flex-col h-[60vh] sm:h-[70vh] bg-black/70 border ${config.colors.chatBorder} rounded-xl shadow-lg overflow-hidden`}>
+    <div className="flex flex-col h-full w-full">
       {/* Mensajes */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            className={`max-w-[80%] px-4 py-2 rounded-lg shadow-md text-sm
-              ${msg.role === "user"
-                ? `ml-auto ${config.colors.userBg} ${config.colors.userText} border ${config.colors.userBorder}`
-                : `mr-auto ${config.colors.aiBg} ${config.colors.aiText} border ${config.colors.aiBorder} font-semibold`}
-            `}
-          >
-            <MarkdownRenderer 
-              content={msg.content} 
-              selectedRace={selectedRace}
-              isUser={msg.role === "user"}
-            />
-          </div>
-        ))}
-        <div ref={messagesEndRef} />
+      <div className="flex-1 overflow-y-auto px-4 py-6 pb-32">
+        <div className="flex flex-col gap-4 max-w-2xl mx-auto">
+          {messages.map((msg, i) => (
+            <div key={i} className={`flex ${msg.role === "user" ? "justify-end" : "justify-start"}`}>
+              <div
+                className={`rounded-2xl px-4 py-3 max-w-[80%] shadow-lg whitespace-pre-line text-base font-normal
+                  ${msg.role === "user" ? raceBubble[selectedRace].user : raceBubble[selectedRace].ai}
+                `}
+                style={{ boxShadow: "0 4px 12px 0 rgba(0,0,0,0.3)" }}
+              >
+                <MarkdownRenderer
+                  content={msg.content}
+                  selectedRace={selectedRace}
+                  isUser={msg.role === "user"}
+                />
+              </div>
+            </div>
+          ))}
+          <div ref={messagesEndRef} />
+        </div>
       </div>
       
-      {/* Input y acciones */}
-      <form
-        className={`flex gap-2 p-3 border-t ${config.colors.chatBorder} bg-black/80`}
-        onSubmit={e => {
-          e.preventDefault();
-          sendMessage();
-        }}
-      >
-        <input
-          className={`flex-1 rounded-lg px-3 py-2 bg-gray-950 ${config.colors.aiText} border ${config.colors.inputBorder} focus:outline-none focus:ring-2 ${config.colors.inputFocus}`}
-          placeholder={config.placeholder}
-          value={input}
-          onChange={e => setInput(e.target.value)}
-          disabled={loading}
-        />
-        <button
-          type="submit"
-          className={`${config.colors.button} text-white font-bold px-4 py-2 rounded-lg disabled:opacity-50`}
-          disabled={loading || !input.trim()}
+      {/* Input fijo abajo */}
+      <div className="fixed bottom-0 left-0 w-full bg-gradient-to-t from-black from-opacity-90 to-transparent backdrop-blur-sm border-t border-gray-800 border-opacity-50 z-20">
+        <form
+          className="max-w-2xl mx-auto flex items-center gap-3 py-4 px-4"
+          onSubmit={e => {
+            e.preventDefault();
+            sendMessage();
+          }}
         >
-          {loading ? "Enviando..." : "Enviar"}
-        </button>
-        <button
-          type="button"
-          onClick={() => saveChat(messages)}
-          disabled={saveStatus === "saving" || messages.length <= 1}
-          className={getSaveButtonClass()}
-          title="Guardar chat manualmente"
-        >
-          {getSaveButtonText()}
-        </button>
-      </form>
-    </section>
+          <input
+            className={`flex-1 rounded-xl px-4 py-3 bg-gray-900 bg-opacity-80 border border-gray-700 text-white placeholder-gray-400 outline-none shadow-lg focus:outline-none focus:ring-2 ${raceBubble[selectedRace].input}`}
+            placeholder={config.placeholder}
+            value={input}
+            onChange={e => setInput(e.target.value)}
+            disabled={loading}
+            autoFocus
+            maxLength={1000}
+          />
+          <button
+            type="submit"
+            className={`px-5 py-3 rounded-xl font-bold text-base shadow-lg transition-all ${raceBubble[selectedRace].send} disabled:opacity-50 disabled:cursor-not-allowed`}
+            disabled={loading || !input.trim()}
+          >
+            {loading ? "Enviando..." : "Enviar"}
+          </button>
+          <button
+            type="button"
+            onClick={() => saveChat(messages)}
+            disabled={saveStatus === "saving" || messages.length <= 1}
+            className={getSaveButtonClass()}
+            title="Guardar chat manualmente"
+          >
+            {getSaveButtonText()}
+          </button>
+        </form>
+      </div>
+    </div>
   );
-} 
+}
+
+// NOTA: El header debe estar fuera de este componente, en layout o page, para ser siempre oscuro y fijo. 
